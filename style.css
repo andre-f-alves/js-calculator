@@ -23,7 +23,7 @@ html, body {
 .calculator {
   background-color: var(--dark1);
   color: white;
-  width: max-content;
+  width: 339px;
   height: max-content;
   padding: 15px;
   border-radius: 7px;
