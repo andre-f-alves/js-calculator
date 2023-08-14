@@ -42,21 +42,24 @@ html, body {
   width: 100%;
   height: max-content;
   margin-top: 8px;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
+  border-radius: 3px;
+}
+
+.operation-display, .result-display {
+  word-wrap: break-word;
 }
 
 .operation-display {
   font-size: 1em;
-  height: 30px;
+  min-height: 30px;
   padding: 3px 5px;
-  /* border: 1px solid black; */
 }
 
 .result-display {
   font-size: 2em;
-  height: 50px;
+  min-height: 50px;
   padding: 0px 5px;
-  /* border: 1px solid black; */
 }
 
 .keyboard {

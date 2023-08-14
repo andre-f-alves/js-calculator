@@ -1,7 +1,7 @@
 import Calculator from './calculator.js'
 
-let previousValue = document.getElementById('previous-value')
-let currentValue = document.getElementById('current-value')
+let previousInput = document.getElementById('previous-input')
+let currentInput = document.getElementById('current-input')
 const keyboard = document.querySelector('div.keyboard')
 
 const labels = ['C', '<', '/', '*', '7', '8', '9', '+', '4', '5', '6', '-', '1', '2', '3', '=', '0', '.']
@@ -18,8 +18,8 @@ const keys = labels.map(label => {
 })
 
 const calc = new Calculator(
-  previousValue,
-  currentValue
+  previousInput,
+  currentInput
 )
 
 keys.forEach(key => {
@@ -30,6 +30,9 @@ keys.forEach(key => {
 
     if (+keyValue >= 0 || keyValue === '.') {
       calc.showDigitOnScreen(keyValue)
+      
+    } else {
+      calc.operation(keyValue)
     }
   })
 })
