@@ -20,83 +20,70 @@ export default class Calculator {
     secondOperand = null,
     newOperation
   ) {
-    // console.log(`${firstOperand} ${operation} ${secondOperand} = ${result}`)
-
     if (result === null) {
       this.currentInput.innerText += this.currentValue
-      // console.log(this.previousInput.innerText)
-    
-    } else {
-      if (firstOperand === 0) {
-        result = secondOperand
-      }
-
-      if (!newOperation) {
-        this.previousInput.innerText = `${result} ${operation}`
-        this.currentInput.innerText = ''
-
-      } else if (['+', '-', '/', '*'].includes(newOperation)) {
-        this.previousInput.innerText = `${result} ${newOperation}`
-        this.currentInput.innerText = ''
-
-      } else {
-        this.previousInput.innerText = `${firstOperand} ${operation} ${secondOperand} =`
-        this.currentInput.innerText = result
-      }
-    }
-  }
-
-  operation(keyFunction) {
-    if (this.currentInput.innerText === '' && keyFunction !== 'C') {
-      if (this.previousInput.innerText !== '') {
-        this.changeOperation(keyFunction)
-      }
       return
     }
+    const isEqual = newOperation === '='
 
+    this.previousInput.innerText = isEqual ? `${firstOperand} ${operation} ${secondOperand} =` : `${result} ${operation}`
+    this.currentInput.innerText = isEqual ? result : ''
+  }
+
+  // TODO: fix division bug
+  operation(keyFunction) {
+    if (this.currentInput.innerText === '' && keyFunction !== 'C' && this.previousInput.innerText !== '') {
+      this.changeOperation(keyFunction)
+      return
+    }
+    const thereIsPreviousOperator = ['+', '-', '/', '*'].includes(this.previousInput.innerText.split(' ')[1])
     let result
-    const newOperation = ['+', '-', '/', '*'].includes(this.previousInput.innerText.split(' ')[1]) ? keyFunction : false
+    let newOperation = thereIsPreviousOperator ? keyFunction : false
     
-    const firstOperand = +this.previousInput.innerText.split(' ')[0]
+    let firstOperand = this.previousInput.innerText.includes('=') ? 0 : +this.previousInput.innerText.split(' ')[0]
     const secondOperand = +this.currentInput.innerText
+
+    const operations = {
+      '+': function sum(a, b) {
+        return a + b
+      },
     
+      '-': function subtraction(a, b) {
+        return a - b
+      },
+    
+      '*': function multiplication(a, b) {
+        return a * b
+      },
+    
+      '/': function division(a, b) {
+        return a / b
+      }
+    }
+
     if (
-      ['+', '-', '/', '*'].includes(this.previousInput.innerText.split(' ')[1]) &&
+      thereIsPreviousOperator &&
       this.currentInput.innerText !== '' &&
       !['C', '<', '.'].includes(keyFunction)
     ) {
-      // console.log('Já há uma operação')
       keyFunction = this.previousInput.innerText.split(' ')[1]
-      // console.log(newOperation)
     }
 
-    // console.log(firstOperand, keyFunction, secondOperand)
-    // console.log(this.currentInput.innerText)
+    if (['+', '-', '/', '*'].includes(keyFunction)) {
+      const operationFunction = operations[keyFunction]
+      result = operationFunction(firstOperand, secondOperand)
+
+      keyFunction = thereIsPreviousOperator && ['+', '-', '/', '*'].includes(newOperation) ? newOperation : keyFunction 
+      this.updateScreen(result, keyFunction, firstOperand, secondOperand, newOperation)
+      return
+    }
 
     switch (keyFunction) {
-      case '+':
-        result = firstOperand + secondOperand
-        this.updateScreen(result, keyFunction, firstOperand, secondOperand, newOperation)
-        break
-
-      case '-':
-        result = firstOperand - secondOperand
-        this.updateScreen(result, keyFunction, firstOperand, secondOperand, newOperation)
-        break
-
-      case '/':
-        result = firstOperand / secondOperand
-        this.updateScreen(result, keyFunction, firstOperand, secondOperand, newOperation)
-        break
-
-      case '*':
-        result = firstOperand * secondOperand
-        this.updateScreen(result, keyFunction, firstOperand, secondOperand, newOperation)
-        break
-
       case '=':
-        const operation = this.previousInput.innerText.split(' ')[1]
-        this.operation(operation)
+        const operator = this.previousInput.innerText.split(' ')[1]
+        const operationFunction = operations[operator]
+        result = operationFunction(firstOperand, secondOperand)
+        this.updateScreen(result, operator, firstOperand, secondOperand, newOperation)
         break
 
       case 'C':
@@ -118,7 +105,6 @@ export default class Calculator {
     if (!mathOperations.includes(operation)) {
       return
     }
-
     this.previousInput.innerText = this.previousInput.innerText.slice(0, -1) + operation
   }
 }
