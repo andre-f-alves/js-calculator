@@ -3,6 +3,7 @@ export default class Calculator {
     this.previousInput = previousInput
     this.currentInput = currentInput
     this.currentValue = ''
+    this.keys = ['C', '<', '/', '*', '7', '8', '9', '+', '4', '5', '6', '-', '1', '2', '3', '=', '0', '.']
   }
 
   showDigitOnScreen(digit) {

@@ -2,6 +2,7 @@
   /* Colors */
   --dark1: #181818;
   --dark2: #2c2c2c;
+  --dark3: #3b3b3b;
 }
 
 * {
@@ -87,4 +88,15 @@ html, body {
 .zero {
   grid-column: 1 / 3;
   width: 100%;
+}
+
+.key:hover {
+  background-color: var(--dark3);
+}
+
+.key:active {
+  width: 97%;
+  height: 97%;
+  justify-self: center;
+  align-self: center;
 }
