@@ -30,50 +30,49 @@ export default class Calculator {
     this.currentInput.innerText = isEqual ? result : ''
   }
 
-  // TODO: fix division bug
   operation(keyFunction) {
     if (this.currentInput.innerText === '' && keyFunction !== 'C' && this.previousInput.innerText !== '') {
       this.changeOperation(keyFunction)
       return
     }
-    const thereIsPreviousOperator = ['+', '-', '/', '*'].includes(this.previousInput.innerText.split(' ')[1])
-    let result
-    let newOperation = thereIsPreviousOperator ? keyFunction : false
-    
-    let firstOperand = this.previousInput.innerText.includes('=') ? 0 : +this.previousInput.innerText.split(' ')[0]
-    const secondOperand = +this.currentInput.innerText
 
-    const operations = {
-      '+': function sum(a, b) {
-        return a + b
-      },
-    
-      '-': function subtraction(a, b) {
-        return a - b
-      },
-    
-      '*': function multiplication(a, b) {
-        return a * b
-      },
-    
-      '/': function division(a, b) {
-        return a / b
-      }
+    const thereIsPreviousOperator = ['+', '-', '/', '*'].includes(this.previousInput.innerText.split(' ')[1])
+    let newOperation = thereIsPreviousOperator ? keyFunction : false
+    let result
+    let firstOperand = +this.previousInput.innerText.split(' ')[0]
+    let secondOperand = +this.currentInput.innerText
+
+    if (this.previousInput.innerText === '') {
+      firstOperand = +this.currentInput.innerText
+      secondOperand = keyFunction === '/' || keyFunction === '*' ? 1 : 0
+
+    } else if (this.previousInput.innerText[this.previousInput.innerText.length - 1] === '=') {
+      firstOperand = keyFunction === '*' ? 1 : keyFunction === '/' ? this.currentInput.innerText : 0
+      secondOperand = keyFunction === '/' ? 1 : +this.currentInput.innerText
     }
 
-    if (
-      thereIsPreviousOperator &&
-      this.currentInput.innerText !== '' &&
-      !['C', '<', '.'].includes(keyFunction)
-    ) {
+    const operations = {
+      '+': (a, b) => a + b,
+    
+      '-': (a, b) => a - b,
+    
+      '*': (a, b) => a * b,
+    
+      '/': (a, b) => a / b
+    }
+
+    if (thereIsPreviousOperator && this.currentInput.innerText !== '' && !['C', '<', '.'].includes(keyFunction)) {
       keyFunction = this.previousInput.innerText.split(' ')[1]
     }
 
     if (['+', '-', '/', '*'].includes(keyFunction)) {
+      if (this.previousInput.innerText[this.previousInput.innerText.length - 1] === '=') {
+        keyFunction = newOperation
+      }
       const operationFunction = operations[keyFunction]
       result = operationFunction(firstOperand, secondOperand)
 
-      keyFunction = thereIsPreviousOperator && ['+', '-', '/', '*'].includes(newOperation) ? newOperation : keyFunction 
+      keyFunction = thereIsPreviousOperator && ['+', '-', '/', '*'].includes(newOperation) ? newOperation : keyFunction
       this.updateScreen(result, keyFunction, firstOperand, secondOperand, newOperation)
       return
     }
