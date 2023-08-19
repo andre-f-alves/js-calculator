@@ -3,10 +3,7 @@ import Calculator from './calculator.js'
 const previousInput = document.querySelector('#previous-input')
 const currentInput = document.querySelector('#current-input')
 const keyboard = document.querySelector('.keyboard')
-const calc = new Calculator(
-  previousInput,
-  currentInput
-)
+const calc = new Calculator(previousInput, currentInput)
 
 const keys = calc.keys.map(label => {
   const key = document.createElement('button')
@@ -29,7 +26,24 @@ keys.forEach(key => {
       calc.showDigitOnScreen(keyValue)
 
     } else {
-      calc.operation(keyValue)
+      if (calc.mathOperators.includes(keyValue) || keyValue === '=') {
+        if (calc.mathOperators.includes(previousInput.innerText.split(' ')[1]) && currentInput.innerText === '') {
+          calc.changeOperation(keyValue)
+          return
+        }
+        calc.operation(keyValue)
+        return
+      }
+      
+      switch (keyValue) {
+        case 'C':
+          calc.clearScreen()
+          break
+      
+        case '<':
+          calc.backspace()
+          break
+      }
     }
   })
 })
