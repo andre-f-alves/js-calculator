@@ -47,6 +47,10 @@ keys.forEach(key => {
       }
 
       const mathExpression = calc.operation(keyValue)
+      if (mathExpression.operator === '/' && mathExpression.secondOperand === 0) {
+        alert('Impossível divisão por 0 (zero)! Por favor, digite outro número.')
+        calc.backspace()
+      }
       calc.updateScreen('', mathExpression)
       return
     }

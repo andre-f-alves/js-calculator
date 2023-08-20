@@ -61,9 +61,13 @@ export default class Calculator {
       operator = this.previousInput.innerText.split(' ')[1]
     }
 
-    if (operator) {  
+    if (operator) {
       if (this.previousInput.innerText[this.previousInput.innerText.length - 1] === '=') {
         operator = newOperation
+      }
+
+      if (operator === '/' && secondOperand === 0) {
+        return { result, operator, firstOperand, secondOperand, newOperation }
       }
 
       const operationFunction = this.mathOperation[operator]
@@ -72,13 +76,7 @@ export default class Calculator {
       operator = thereIsPreviousOperator && newOperation !== '=' ? newOperation : operator
     }
 
-    if (keyFunction === '=' && this.previousInput.innerText !== '') {
-      operator = this.previousInput.innerText.split(' ')[1]
-      const operationFunction = this.mathOperation[operator]
-      result = operationFunction(firstOperand, secondOperand)
-    }
-
-    return {result, operator, firstOperand, secondOperand, newOperation}
+    return { result, operator, firstOperand, secondOperand, newOperation }
   }
 
   clearScreen() {
