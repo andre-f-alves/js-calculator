@@ -37,28 +37,28 @@ keys.forEach(key => {
 
     if (+keyValue >= 0 || keyValue === '.') {
       calc.updateScreen(keyValue, {})
+      return
 
-    } else {
-      if (calc.mathOperators.includes(keyValue) || keyValue === '=') {
-        if (calc.mathOperators.includes(previousInput.innerText.split(' ')[1]) && currentInput.innerText === '') {
-          calc.changeOperation(keyValue)
-          return
-        }
-
-        const mathExpression = calc.operation(keyValue)
-        calc.updateScreen('', mathExpression)
+    }
+    if (calc.mathOperators.includes(keyValue) || keyValue === '=') {
+      if (calc.mathOperators.includes(previousInput.innerText.split(' ')[1]) && currentInput.innerText === '') {
+        calc.changeOperation(keyValue)
         return
       }
 
-      switch (keyValue) {
-        case 'C':
-          calc.clearScreen()
-          break
-      
-        case '<':
-          calc.backspace()
-          break
-      }
+      const mathExpression = calc.operation(keyValue)
+      calc.updateScreen('', mathExpression)
+      return
+    }
+
+    switch (keyValue) {
+      case 'C':
+        calc.clearScreen()
+        break
+    
+      case '<':
+        calc.backspace()
+        break
     }
   })
 })
