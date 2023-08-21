@@ -35,33 +35,34 @@ keys.forEach(key => {
   key.addEventListener('click', (event) => {
     const keyValue = event.target.getAttribute('id')
 
-    if (+keyValue >= 0 || keyValue === '.') {
-      calc.updateScreen(keyValue, {})
-      return
-
-    }
-    if (calc.mathOperators.includes(keyValue) || keyValue === '=') {
-      if (calc.mathOperators.includes(previousInput.innerText.split(' ')[1]) && currentInput.innerText === '') {
-        calc.changeOperation(keyValue)
-        return
-      }
-
-      const mathExpression = calc.operation(keyValue)
-      if (mathExpression.operator === '/' && mathExpression.secondOperand === 0) {
-        alert('Impossível divisão por 0 (zero)! Por favor, digite outro número.')
-        calc.backspace()
-      }
-      calc.updateScreen('', mathExpression)
-      return
-    }
+     if (+keyValue >= 0 || keyValue === '.') {
+       calc.updateDisplay(keyValue, {})
+       return
+     }
 
     switch (keyValue) {
       case 'C':
-        calc.clearScreen()
+        calc.clearDisplay()
         break
     
       case '<':
         calc.backspace()
+        break
+      
+      default:
+        if (calc.mathOperators.includes(previousInput.innerText.split(' ')[1]) && currentInput.innerText === '') {
+          calc.changeOperation(keyValue)
+          break
+        }
+  
+        try {
+          const mathExpression = calc.operation(keyValue)
+          calc.updateDisplay('', mathExpression)
+  
+        } catch {
+          alert('Impossível divisão por zero! Por favor, digite outro número.')
+          calc.backspace()
+        }
         break
     }
   })

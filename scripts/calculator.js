@@ -15,26 +15,24 @@ export default class Calculator {
     this.mathOperators = Object.keys(this.mathOperation)
   }
 
-  updateScreen(digit, { result, operator, firstOperand, secondOperand, newOperation }) {
+  updateDisplay(digit, { firstOperand, secondOperand, operator, result, isCalculationOperation }) {
     if (result === undefined) {
-      if (digit === '.' && (this.currentInput.innerText.includes('.') || this.currentInput.innerText === '')) {
-        return
-      }
+      if (digit === '.' && (this.currentInput.innerText.includes('.') || this.currentInput.innerText === '')) return
       this.currentInput.innerText += digit
       return
     }
-    const isEqual = newOperation === '='
 
-    this.previousInput.innerText = isEqual ? `${firstOperand} ${operator} ${secondOperand} =` : `${result} ${operator}`
-    this.currentInput.innerText = isEqual ? result : ''
+    this.previousInput.innerText = isCalculationOperation ? `${firstOperand} ${operator} ${secondOperand} =` : `${result} ${operator}`
+    this.currentInput.innerText = isCalculationOperation ? result : ''
   }
 
   operation(keyFunction) {
     const thereIsPreviousOperator = this.mathOperators.includes(this.previousInput.innerText.split(' ')[1])
-    let newOperation = thereIsPreviousOperator ? keyFunction : undefined
+    const isCalculationOperation = keyFunction === '='
+
+    let operator = !isCalculationOperation ? keyFunction : undefined
     let firstOperand = +this.previousInput.innerText.split(' ')[0]
     let secondOperand = +this.currentInput.innerText
-    let operator = keyFunction !== '=' ? keyFunction : undefined
     let result
 
     if (this.previousInput.innerText === '') {
@@ -57,29 +55,27 @@ export default class Calculator {
       }
     }
 
-    if (thereIsPreviousOperator && this.currentInput.innerText !== '') {
+    if (thereIsPreviousOperator) {
       operator = this.previousInput.innerText.split(' ')[1]
     }
 
     if (operator) {
       if (this.previousInput.innerText[this.previousInput.innerText.length - 1] === '=') {
-        operator = newOperation
+        operator = keyFunction
       }
 
-      if (operator === '/' && secondOperand === 0) {
-        return { result, operator, firstOperand, secondOperand, newOperation }
-      }
+      if (operator === '/' && secondOperand === 0) throw '[ERROR] Division by zero.'
 
       const operationFunction = this.mathOperation[operator]
       result = operationFunction(firstOperand, secondOperand)
 
-      operator = thereIsPreviousOperator && newOperation !== '=' ? newOperation : operator
+      operator = thereIsPreviousOperator && !isCalculationOperation ? keyFunction : operator
     }
 
-    return { result, operator, firstOperand, secondOperand, newOperation }
+    return { firstOperand, secondOperand, operator, result, isCalculationOperation }
   }
 
-  clearScreen() {
+  clearDisplay() {
     this.currentInput.innerText = ''
     this.previousInput.innerText = ''
   }
