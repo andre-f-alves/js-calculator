@@ -65,7 +65,7 @@ export default class Calculator {
       }
 
       if (operator === '/' && secondOperand === 0) throw '[ERROR] Division by zero.'
-
+      
       const operationFunction = this.mathOperation[operator]
       result = operationFunction(firstOperand, secondOperand)
 

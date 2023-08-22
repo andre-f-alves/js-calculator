@@ -69,7 +69,9 @@ html, body {
 
 .keyboard {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, 72px);
+  grid-template-rows: repeat(5, 72px);
+  justify-content: center;
   gap: 3px;
 }
 
