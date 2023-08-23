@@ -2,9 +2,14 @@
 
 :root {
   /* Colors */
-  --dark1: #181818;
-  --dark2: #2c2c2c;
-  --dark3: #3b3b3b;
+  --blue-gradient1: #00b7ff;
+  --blue-gradient2: #0077ff;
+  --blue-gradient3: #0030ce;
+  --blue-gradient4: #00007a;
+
+  --calculator: #181818;
+  --key: #2c2c2c;
+  --key-hover: #3b3b3b;
 }
 
 * {
@@ -15,22 +20,24 @@
 }
 
 html, body {
+  background-image: linear-gradient(-225deg, var(--blue-gradient1), var(--blue-gradient2), var(--blue-gradient3), var(--blue-gradient4));
   display: flex;
   flex-direction: row;
   justify-content: center;
   align-items: center;
   width: 100vw;
   height: 100vh;
+  overflow-x: hidden;
 }
 
 .calculator {
-  background-color: var(--dark1);
+  background-color: var(--calculator);
   color: white;
   width: 327px;
   height: max-content;
   padding: 15px;
   border-radius: 7px;
-  box-shadow: 1px 1px 6px 3px #00000065;
+  box-shadow: 3px 3px 8px 2px #00000065;
 }
 
 .calculator h1 {
@@ -48,7 +55,7 @@ html, body {
   margin-top: 8px;
   margin-bottom: 20px;
   border-radius: 3px;
-  box-shadow: inset 0 0 8px 1px #0000004f;
+  box-shadow: 0 0 5px 1px #ffffff8c;
 }
 
 .second-line, .first-line {
@@ -76,13 +83,15 @@ html, body {
 }
 
 .key {
-  background-color: var(--dark2);
+  background-color: var(--key);
   color: white;
   font-size: 1.5em;
   width: 72px;
   height: 72px;
   border: none;
   border-radius: 2px;
+  justify-self: center;
+  align-self: center;
 }
 
 .equal {
@@ -100,12 +109,10 @@ html, body {
   width: 95%;
   height: 95%;
   font-size: 1.4em;
-  justify-self: center;
-  align-self: center;
 }
 
 @media (hover: hover) and (pointer: fine) {
   .key:hover {
-    background-color: var(--dark3);
+    background-color: var(--key-hover);
   }
 }

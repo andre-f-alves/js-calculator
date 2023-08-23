@@ -1,7 +1,7 @@
 import Calculator from './calculator.js'
 
-const previousInput = document.querySelector('#previous-input')
-const currentInput = document.querySelector('#current-input')
+const previousInput = document.querySelector('.second-line')
+const currentInput = document.querySelector('.first-line')
 const keyboard = document.querySelector('.keyboard')
 const calc = new Calculator(previousInput, currentInput)
 
@@ -30,29 +30,29 @@ const keys = calc.keys.map(label => {
 })
 
 keys.forEach(key => {
+  const keyValue = key.getAttribute('id')
   keyboard.appendChild(key)
 
-  key.addEventListener('click', (event) => {
-    const keyValue = event.target.getAttribute('id')
+  if (Number(keyValue) || keyValue === '.') {
+    console.log()
+    key.addEventListener('click', () => calc.updateDisplay(keyValue, {}))
+    return
+  }
 
-     if (+keyValue >= 0 || keyValue === '.') {
-       calc.updateDisplay(keyValue, {})
-       return
-     }
-
-    switch (keyValue) {
-      case 'C':
-        calc.clearDisplay()
-        break
+  switch (keyValue) {
+    case 'C':
+      key.addEventListener('click', () => calc.clearDisplay())
+      break
+  
+    case '<':
+      key.addEventListener('click', () => calc.backspace())
+      break
     
-      case '<':
-        calc.backspace()
-        break
-      
-      default:
+    default:
+      key.addEventListener('click', () => {
         if (calc.mathOperators.includes(previousInput.innerText.split(' ')[1]) && currentInput.innerText === '') {
           calc.changeOperation(keyValue)
-          break
+          return
         }
   
         try {
@@ -63,7 +63,7 @@ keys.forEach(key => {
           alert('Impossível divisão por zero! Por favor, digite outro número.')
           calc.backspace()
         }
-        break
-    }
-  })
+      })
+      break
+  }
 })

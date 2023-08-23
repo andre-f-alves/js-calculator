@@ -88,6 +88,8 @@ export default class Calculator {
   }
 
   changeOperation(operation) {
-    this.previousInput.innerText = this.previousInput.innerText.slice(0, -1) + operation
+    if (this.mathOperators.includes(operation)) {
+      this.previousInput.innerText = this.previousInput.innerText.slice(0, -1) + operation
+    }
   }
 }
