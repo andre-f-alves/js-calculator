@@ -3,7 +3,19 @@ import Calculator from './calculator.js'
 const previousInput = document.querySelector('.second-line')
 const currentInput = document.querySelector('.first-line')
 const keyboard = document.querySelector('.keyboard')
+
 const calc = new Calculator(previousInput, currentInput)
+
+const keys = calc.keys.map(label => {
+  const key = document.createElement('button')
+
+  key.setAttribute('type', 'button')
+  key.setAttribute('id', label)
+  key.classList.add('key')
+  key.innerHTML = convertToHTMLEntity(label)
+
+  return key
+})
 
 function convertToHTMLEntity(character) {
   const HTMLEntities = {
@@ -14,27 +26,14 @@ function convertToHTMLEntity(character) {
     '/': '&divide;',
     '=': '&equals;'
   }
-  return HTMLEntities[character] ? HTMLEntities[character] : character
+  return HTMLEntities[character] ?? character
 }
-
-const keys = calc.keys.map(label => {
-  const key = document.createElement('button')
-  const classZeroOrEqual = label === '0' ? 'zero' : label === '=' ? 'equal' : 'key'
-
-  key.setAttribute('type', 'button')
-  key.setAttribute('id', label)
-  key.classList.add('key', classZeroOrEqual)
-  key.innerHTML = convertToHTMLEntity(label)
-
-  return key
-})
 
 keys.forEach(key => {
   const keyValue = key.getAttribute('id')
   keyboard.appendChild(key)
 
-  if (Number(keyValue) || keyValue === '.') {
-    console.log()
+  if (+keyValue >= 0 || keyValue === '.') {
     key.addEventListener('click', () => calc.updateDisplay(keyValue, {}))
     return
   }

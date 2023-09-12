@@ -15,43 +15,53 @@ export default class Calculator {
     this.mathOperators = Object.keys(this.mathOperation)
   }
 
-  updateDisplay(digit, { firstOperand, secondOperand, operator, result, isCalculationOperation }) {
+  updateDisplay(digit, { firstOperand, secondOperand, operator, result, showResult }) {
     if (result === undefined) {
       if (digit === '.' && (this.currentInput.innerText.includes('.') || this.currentInput.innerText === '')) return
       this.currentInput.innerText += digit
       return
     }
 
-    this.previousInput.innerText = isCalculationOperation ? `${firstOperand} ${operator} ${secondOperand} =` : `${result} ${operator}`
-    this.currentInput.innerText = isCalculationOperation ? result : ''
+    if (showResult) {
+      this.previousInput.innerText = `${firstOperand} ${operator} ${secondOperand} =`
+      this.currentInput.innerText = result
+      return
+    }
+
+    this.previousInput.innerText = `${result} ${operator}`
+    this.currentInput.innerText = ''
   }
 
   operation(keyFunction) {
     const thereIsPreviousOperator = this.mathOperators.includes(this.previousInput.innerText.split(' ')[1])
-    const isCalculationOperation = keyFunction === '='
+    const showResult = keyFunction === '='
 
-    let operator = !isCalculationOperation ? keyFunction : undefined
-    let firstOperand = +this.previousInput.innerText.split(' ')[0]
-    let secondOperand = +this.currentInput.innerText
+    let operator = !showResult ? keyFunction : undefined
+    let firstOperand = +this.currentInput.innerText
+    let secondOperand = operator === '/' || operator === '*' ? 1 : 0
     let result
 
-    if (this.previousInput.innerText === '') {
-      firstOperand = +this.currentInput.innerText
-      secondOperand = operator === '/' || operator === '*' ? 1 : 0
+    if (this.previousInput.innerText !== '') {
+      firstOperand = +this.previousInput.innerText.split(' ')[0]
+      secondOperand = +this.currentInput.innerText 
 
-    } else if (this.previousInput.innerText[this.previousInput.innerText.length - 1] === '=') {
-      if (operator === '*') {
-        firstOperand = 1
-      
-      } else if (operator === '/') {
-        firstOperand = +this.currentInput.innerText
-        secondOperand = 1
+    } else if (this.previousInput.innerText.slice(-1) === '=') {
+      switch (operator) {
+        case '*':
+          firstOperand = 1
+          break
 
-      } else if (operator === '-') {
-        firstOperand = +this.currentInput.innerText * 2
-
-      } else {
-        firstOperand = 0
+        case '/':
+          firstOperand = +this.currentInput.innerText
+          secondOperand = 1
+          break
+        
+        case '-':
+          firstOperand = +this.currentInput.innerText * 2
+          break
+        
+        default:
+          firstOperand = 0
       }
     }
 
@@ -60,19 +70,19 @@ export default class Calculator {
     }
 
     if (operator) {
-      if (this.previousInput.innerText[this.previousInput.innerText.length - 1] === '=') {
+      if (this.previousInput.innerText.slice(-1) === '=') {
         operator = keyFunction
       }
 
       if (operator === '/' && secondOperand === 0) throw '[ERROR] Division by zero.'
       
-      const operationFunction = this.mathOperation[operator]
-      result = operationFunction(firstOperand, secondOperand)
+      const mathFunction = this.mathOperation[operator]
+      result = mathFunction(firstOperand, secondOperand)
 
-      operator = thereIsPreviousOperator && !isCalculationOperation ? keyFunction : operator
+      operator = thereIsPreviousOperator && !showResult ? keyFunction : operator
     }
 
-    return { firstOperand, secondOperand, operator, result, isCalculationOperation }
+    return { firstOperand, secondOperand, operator, result, showResult }
   }
 
   clearDisplay() {
@@ -81,15 +91,15 @@ export default class Calculator {
   }
 
   backspace() {
-    this.currentInput.innerText = this.currentInput.innerText.slice(0, -1)
-    if (this.previousInput.innerText[this.previousInput.innerText.length - 1] === '=') {
+    this.currentInput.innerText = this.currentInput.innerText.slice(-1)
+    if (this.previousInput.innerText.slice(-1) === '=') {
       this.previousInput.innerText = ''
     }
   }
 
   changeOperation(operation) {
     if (this.mathOperators.includes(operation)) {
-      this.previousInput.innerText = this.previousInput.innerText.slice(0, -1) + operation
+      this.previousInput.innerText = this.previousInput.innerText.slice(-1) + operation
     }
   }
 }
