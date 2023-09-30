@@ -50,6 +50,7 @@ keys.forEach(key => {
     default:
       key.addEventListener('click', () => {
         if (calc.mathOperators.includes(previousInput.innerText.split(' ')[1]) && currentInput.innerText === '') {
+          console.log('entrou')
           calc.changeOperation(keyValue)
           return
         }

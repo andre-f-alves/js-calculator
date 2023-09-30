@@ -37,13 +37,13 @@ export default class Calculator {
     const showResult = keyFunction === '='
 
     let operator = !showResult ? keyFunction : undefined
-    let firstOperand = +this.currentInput.innerText
-    let secondOperand = operator === '/' || operator === '*' ? 1 : 0
+    let firstOperand = +this.previousInput.innerText.split(' ')[0]
+    let secondOperand = +this.currentInput.innerText
     let result
 
-    if (this.previousInput.innerText !== '') {
-      firstOperand = +this.previousInput.innerText.split(' ')[0]
-      secondOperand = +this.currentInput.innerText 
+    if (this.previousInput.innerText === '') {
+      firstOperand = +this.currentInput.innerText
+      secondOperand = operator === '/' || operator === '*' ? 1 : 0
 
     } else if (this.previousInput.innerText.slice(-1) === '=') {
       switch (operator) {
@@ -91,7 +91,7 @@ export default class Calculator {
   }
 
   backspace() {
-    this.currentInput.innerText = this.currentInput.innerText.slice(-1)
+    this.currentInput.innerText = this.currentInput.innerText.slice(0, -1)
     if (this.previousInput.innerText.slice(-1) === '=') {
       this.previousInput.innerText = ''
     }
@@ -99,7 +99,7 @@ export default class Calculator {
 
   changeOperation(operation) {
     if (this.mathOperators.includes(operation)) {
-      this.previousInput.innerText = this.previousInput.innerText.slice(-1) + operation
+      this.previousInput.innerText = this.previousInput.innerText.slice(0, -1) + operation
     }
   }
 }
