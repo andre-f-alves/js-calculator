@@ -1,2 +1,2 @@
 # js-calculator
-Calculadora básica com HTML, CSS e JavaScript puro.
+Calculadora web básica criada com HTML, CSS e JavaScript puro.
